@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "领取资源",
+  "navigationBarBackgroundColor": "#7274ec",
+  "usingComponents": {
+    "van-dialog": "../../static/vant/dialog/index"
+  }
+}

@@ -1,0 +1,104 @@
+{
+	"description": "项目配置文件。",
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true
+	},
+	"miniprogramRoot": "dist/wx/",
+	"compileType": "miniprogram",
+	"appid": "wx9bff1f36f7250b70",
+	"projectname": "xcx_resource",
+	"libVersion": "2.5.0",
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"currentL": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": 10,
+			"list": [
+				{
+					"id": -1,
+					"name": "goodsDetail",
+					"pathName": "pages/goodsDetail/main",
+					"query": "id=2"
+				},
+				{
+					"id": -1,
+					"name": "个人中心",
+					"pathName": "pages/personal/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "客服",
+					"pathName": "pages/customService/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "资源分类详情",
+					"pathName": "pages/resourceCate/main",
+					"query": ""
+				},
+				{
+					"id": 4,
+					"name": "文章详情",
+					"pathName": "pages/resourceDetail/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "领取资源",
+					"pathName": "pages/receiveResource/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "直播页面",
+					"pathName": "pages/living/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "领取成功",
+					"pathName": "pages/receiveSuccess/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "合作授权",
+					"pathName": "pages/cooperation/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "解锁的课程",
+					"pathName": "pages/myResource/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "完善信息",
+					"pathName": "pages/completeInfo/main",
+					"query": ""
+				}
+			]
+		}
+	}
+}

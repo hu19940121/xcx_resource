@@ -1,0 +1,19 @@
+/* pages/noAuthUserPage/noAuthUserPage.wxss */
+.noAuthUserPage {
+  text-align: center
+}
+.noAuthUserPage image {
+  display: block;
+  width: 300rpx;
+  height: 300rpx;
+  margin: 80rpx auto 0;
+}
+.noAuthUserPage text {
+  font-size: 26rpx;
+  color: #333
+}
+.noAuthUserPage button {
+  display: block;
+  width: 260rpx;
+  margin: 20rpx auto 0;
+}

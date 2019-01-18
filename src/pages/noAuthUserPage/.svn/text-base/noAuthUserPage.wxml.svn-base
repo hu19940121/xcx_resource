@@ -1,0 +1,6 @@
+<!--pages/noAuthUserPage/noAuthUserPage.wxml-->
+<view class='noAuthUserPage'>
+  <image src='../common/images/index_img_nouserinfo.png'></image>
+  <text>玩物星球俱乐部小程序请求获得您的\n用户信息，点击确定登录小程序</text>
+  <button type='primary' size='mini' bindgetuserinfo="onGotUserInfo" open-type="getUserInfo">确定</button>
+</view>

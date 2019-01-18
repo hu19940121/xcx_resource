@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/counter/main",
+    "pages/noAuthUserPage/main",
+    "pages/goodsDetail/main",
+    "pages/goodsList/main",
+    "pages/personal/main",
+    "pages/customService/main",
+    "pages/resourceCate/main",
+    "pages/receiveResource/main",
+    "pages/resourceDetail/main",
+    "pages/living/main",
+    "pages/receiveSuccess/main",
+    "pages/cooperation/main",
+    "pages/myResource/main",
+    "pages/completeInfo/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#31B6FF",
+    "navigationBarTitleText": "玩物立志",
+    "navigationBarTextStyle": "#fff"
+  },
+  "tabBar": {
+    "selectedColor": "#31B6FF",
+    "list": [
+      {
+        "pagePath": "pages/index/main",
+        "text": "首页",
+        "iconPath": "/static/images/indextab_icon_indexoff.png",
+        "selectedIconPath": "/static/images/indextab_icon_indexon.png"
+      },
+      {
+        "pagePath": "pages/personal/main",
+        "text": "个人中心",
+        "iconPath": "/static/images/indextab_icon_myoff.png",
+        "selectedIconPath": "/static/images/indextab_icon_myon.png"
+      }
+    ]
+  },
+  "debug": true
+}

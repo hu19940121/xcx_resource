@@ -1,0 +1,7 @@
+
+{
+  "usingComponents": {
+    "van-dialog": "../../static/vant/dialog/index",
+    "van-field": "../../static/vant/field/index"
+  }
+}
