@@ -1,6 +1,7 @@
 // import wx from 'wx' // 引用微信小程序wx对象
 // const domain = 'https://www.steamglobe.com' // 正式
-const domain = 'http://dev.steamglobe.com' // 测试
+// const domain = 'http://dev.steamglobe.com' // 测试
+const domain = 'http://192.168.0.154:8082' // 测试
 
 const http = function (opt, data) { // opt包括请求的url h和 请求方式 get post put delete
   let sessionKey = wx.getStorageSync('sessionKey')// 本地取存储的sessionID

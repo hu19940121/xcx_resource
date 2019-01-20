@@ -2,15 +2,15 @@
 import { mapActions } from 'vuex'
 export default {
   onLaunch () {
-    // const sessionKey = wx.getStorageSync('sessionKey')
-    // console.log('sessionKey', sessionKey)
-    // if (!sessionKey) {
-    //   setTimeout(() => {
-    //     wx.navigateTo({
-    //       url: '/pages/noAuthUserPage/main'
-    //     })
-    //   }, 500)
-    // }
+    const sessionKey = wx.getStorageSync('sessionKey')
+    console.log('sessionKey', sessionKey)
+    if (!sessionKey) {
+      setTimeout(() => {
+        wx.navigateTo({
+          url: '/pages/noAuthUserPage/main'
+        })
+      }, 500)
+    }
   },
   methods: {
     ...mapActions(['login'])

@@ -26,7 +26,7 @@
         </div>
         <span class="tip menu2"></span>
       </div>
-      <div class="menu">
+      <div class="menu" @click="linkToPlanet">
         <img class="icon" src="./images/my_icon_wwlz.png" alt="">
         <div class="menu-desc">
           <p>前往玩物星球小程序</p>
@@ -48,6 +48,8 @@
         </div>
       </div>
     </div>
+    <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">获取手机号</button>
+
   </div>
 </template>
 
@@ -64,19 +66,39 @@ export default {
     this.$setNavigationBarTitle('个人中心')
   },
   methods: {
+    getPhoneNumber (e) {
+      console.log(e.detail.errMsg)
+      console.log(e.detail.iv)
+      console.log(e.detail.encryptedData)
+    },
+    // 跳转至联系人
     linkToContact () {
       wx.navigateTo({
         url: '/pages/customService/main'
       })
     },
+    // 跳转至完善信息
     linkToCompleteInfo () {
       wx.navigateTo({
         url: '/pages/completeInfo/main'
       })
     },
+    // 跳转至我的资源
     linkToMyRes () {
       wx.navigateTo({
         url: '/pages/myResource/main'
+      })
+    },
+    // 跳转至玩物星球俱乐部小程序
+    linkToPlanet () {
+      wx.navigateToMiniProgram({
+        appId: 'wxac35230c99e1209b',
+        path: 'pages/index/index',
+        extraData: {},
+        envVersion: 'develop',
+        success: function () {
+
+        }
       })
     }
   }

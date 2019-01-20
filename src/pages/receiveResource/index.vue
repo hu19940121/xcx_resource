@@ -187,8 +187,8 @@ export default {
               background #FF0036 
     .lq-dialog
       width 90%
-      padding 10rpx 5%
-      height 670rpx
+      padding 0 5%
+      padding-bottom 50rpx
       // box-sizing border-box
       font-size 28rpx
       .title

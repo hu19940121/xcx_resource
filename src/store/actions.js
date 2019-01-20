@@ -11,7 +11,7 @@ export default {
   },
   async login ({dispatch, commit}, loginParams) {
     const res = await http(apis.xcxLogin, loginParams)
-    wx.setStorageSync('sessionKey', res.data)
+    wx.setStorageSync('sessionKey', res.data.token)
     // eslint-disable-next-line no-undef
     var pages = getCurrentPages() // 获取当前打开的页面
     const prePage = pages[0] // 获取进来的页面

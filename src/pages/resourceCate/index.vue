@@ -12,15 +12,11 @@
       <articleItem />
       <articleItem />
     </div>
-    <button type="primary" @click="onClickAlert">aaaaa</button>
   </div>
 </template>
 
 <script>
   import articleItem from '@/components/articleItem'
-  import Dialog from '@/../static/vant/dialog/dialog'
-  const message = '有赞是一家零售科技公司，致力于成为商家服务领域里最被信任的引领者'
-
   export default {
     data () {
       return {
@@ -31,12 +27,7 @@
       this.$setNavigationBarTitle(this.cateName)
     },
     methods: {
-      onClickAlert () {
-        Dialog.alert({
-          title: '标题',
-          message
-        })
-      }
+
     },
     components: {
       articleItem

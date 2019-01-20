@@ -1,36 +1,76 @@
 <template>
   <div class="living">
     <div class="video-wrapper">
-      <video src=""></video>
+      <video :src="videoUrl" 
+        @timeupdate="timeupdate" 
+        danmu-btn="true"
+        enable-danmu="true"
+        :danmu-list="danmuList"
+        id="myVideo"
+      ></video>
+    </div>
+    <div class="send-danmu-wrapper">
+      <input type="text" v-model="danmuValue">
+      <span @click="sendDanmu">发送</span>
     </div>
     <div class="video-info">
       <img :src="avatar" alt="">
       <div class="info-desc">
         <p class="teacher">大树</p>
         <p class="video-introduce">蒙德里安各自话长对方的说法水电费是的水电费蒙德里安各自话长对方的说法水电费是的水电费</p>
+
       </div>
     </div>
-    <div class="main-wrapper">
-      <div v-for="(item,index1) in questionList" :key="index1">
-        <div class="question-wrapper">
-          <div class="item question">
-            <p><span class="presenter">{{item.teacher}}(老师)</span>{{item.question}}</p>
+    <!-- <input type="text" v-model="danmuValue"><button @click="sendDanmu">发送</button> -->
+    <scroll-view
+      scroll-y
+      class="scroll-style"
+      @scrolltolower="lower"
+      @scroll="scroll"
+    >
+      <div class="main-wrapper">
+        <div v-for="(item,index1) in questionList" :key="index1">
+          <div class="question-wrapper">
+            <div class="item question">
+              <p><span class="presenter">{{item.teacher}}(老师)：</span>{{item.question}}</p>
+            </div>
+            <p v-show="userInfo.identity === 0 "  class="tiwen-tip" @click="ask(index1)">对这段有问题？点击提问</p>
           </div>
-          <p v-show="userInfo.identity === 0 "  class="tiwen-tip" @click="ask(index1)">对这段有问题？点击提问</p>
-        </div>
-        <div class="ask-wrapper" v-for="(ask,index2) in item.askList" :key="index2">
-          <div class="item ask-and-replay">
-            <p :class="[{ 'dashed-border': ask.replyList.length > 0 }, 'ask-question']">
-              <span class="asker">{{ask.asker}}：（提问）</span> {{ask.text}}
-            </p>
-            <p class="reply-question" v-for="(reply,index3) in ask.replyList" :key="index3">
-              <span class="replyer">{{reply.replyer}}老师答复：</span>{{reply.text}}
-            </p>
+          <div class="ask-wrapper" v-for="(ask,index2) in item.askList" :key="index2">
+            <div class="item ask-and-replay">
+              <p :class="[{ 'dashed-border': ask.replyList.length > 0 }, 'ask-question']">
+                <span class="asker">{{ask.asker}}：（提问）</span> {{ask.text}}
+              </p>
+              <p class="reply-question" v-for="(reply,index3) in ask.replyList" :key="index3">
+                <span class="replyer">{{reply.replyer}}老师答复：</span>{{reply.text}}
+              </p>
+            </div>
+            <!-- <p v-show="userInfo.identity ===1 " class="tiwen-tip">点击回答这个学员</p> -->
+            <p  class="tiwen-tip" @click="replay(index1,index2)">点击回答这个学员</p>
           </div>
-          <p v-show="userInfo.identity ===1 " class="tiwen-tip">点击回答这个学员</p>
         </div>
+        <!-- <div>
+          <div class="question-wrapper">
+            <div class="item question">
+              <p><span class="presenter">{{currentQuestion.teacher}}(老师)</span>{{currentQuestion.question}}</p>
+            </div>
+            <p v-show="userInfo.identity === 0 "  class="tiwen-tip" @click="ask(index1)">对这段有问题？点击提问</p>
+          </div>
+          <div class="ask-wrapper" v-for="(ask,index2) in currentQuestion.askList" :key="index2">
+            <div class="item ask-and-replay">
+              <p :class="[{ 'dashed-border': ask.replyList.length > 0 }, 'ask-question']">
+                <span class="asker">{{ask.asker}}：（提问）</span> {{ask.text}}
+              </p>
+              <p class="reply-question" v-for="(reply,index3) in ask.replyList" :key="index3">
+                <span class="replyer">{{reply.replyer}}老师答复：</span>{{reply.text}}
+              </p>
+            </div>
+            <p v-show="userInfo.identity ===1 " class="tiwen-tip">点击回答这个学员</p>
+          </div>
+        </div> -->
       </div>
-    </div>
+    </scroll-view>
+
     <van-dialog
         :title="dialogTitle"
         use-slot
@@ -56,6 +96,7 @@
   export default {
     data () {
       return {
+        danmuValue: '',
         visible: false,
         avatar: 'http://img2.imgtn.bdimg.com/it/u=3453901106,1598529040&fm=26&gp=0.jpg',
         questionList: questionList,
@@ -65,22 +106,44 @@
         inputValue: '', // 输入的问题 或者 输入的答案
         dialogTitle: '',
         placeholder: '',
-        questionIndex: null
+        questionIndex: null,
+        askIndex: null,
+        videoUrl: 'http://resource.kaier001.com/zhongdiangong.mp4',
+        currentQuestion: {},
+        loadStatus: true, // 防止scrolltolower多次执行
+        danmuList: [
+          {
+            text: '哈哈哈哈',
+            color: '#ff0000',
+            time: 1
+          },
+          {
+            text: '我看到你了哦',
+            color: '#ff00ff',
+            time: 3
+          }]
       }
     },
+    onLoad () {
+    },
+    onReady () {
+      this.videoContext = wx.createVideoContext('myVideo')
+    },
     methods: {
-      ask (index) {
+      ask (questionIndex) {
         this.inputValue = ''
         this.visible = true
         this.dialogTitle = '提问问题'
         this.placeholder = '请输入问题'
-        this.questionIndex = index
+        this.questionIndex = questionIndex
       },
-      replay () {
+      replay (questionIndex, askIndex) {
         this.inputValue = ''
         this.visible = true
         this.dialogTitle = '回答问题'
         this.placeholder = '请输入答案'
+        this.askIndex = askIndex
+        this.questionIndex = questionIndex
       },
       onChange (event) {
         const { mp } = event
@@ -95,15 +158,58 @@
           })
           return false
         }
-        const { questionIndex } = this
-        const askQuestionItem = {
-          asker: '凯尔',
-          text: this.inputValue,
-          replyList: []
+        const { questionIndex, askIndex } = this
+        if (this.dialogTitle === '提问问题') {
+          const askQuestionItem = {
+            asker: '凯尔',
+            text: this.inputValue,
+            replyList: []
+          }
+          questionList[questionIndex].askList.push(askQuestionItem)
+        } else {
+          const replayItem = {
+            replyer: '凯尔',
+            text: this.inputValue
+          }
+          questionList[questionIndex].askList[askIndex].replyList.push(replayItem)
         }
-        this.questionList[questionIndex].askList.push(askQuestionItem)
         this.visible = false
+      },
+      // 滚动条到达底部
+      lower () {
+        if (this.loadStatus) {
+          this.loadStatus = false
+          setTimeout(() => {
+            console.log('solve')
+            this.loadStatus = true
+          }, 100)
+        }
+      },
+      // 获取随机颜色
+      getRandomColor () {
+        let rgb = []
+        for (let i = 0; i < 3; i++) {
+          let color = Math.floor(Math.random() * 256).toString(16)
+          color = color.length === 1 ? '0' + color : color
+          rgb.push(color)
+        }
+        return '#' + rgb.join('')
+      },
+      sendDanmu () {
+        this.videoContext.sendDanmu({
+          text: this.danmuValue,
+          color: this.getRandomColor()
+        })
       }
+      // timeupdate (e) {
+      //   const { mp } = e
+      //   console.log('mp.detail.currentTime', parseInt(mp.detail.currentTime))
+      //   questionList.map((item, index) => {
+      //     if (item.time === parseInt(mp.detail.currentTime)) {
+      //       this.currentQuestion = item
+      //     }
+      //   })
+      // }
     }
   }
 </script>
@@ -113,6 +219,7 @@
     background #efeff4
   .living
     font-size 28rpx
+    overflow hidden
     .video-wrapper
       width 100%
       height 420rpx
@@ -140,6 +247,28 @@
           overflow hidden
           text-overflow ellipsis
           white-space nowrap
+    .scroll-style
+      height 666rpx
+    .send-danmu-wrapper
+      width 100%
+      height 56rpx
+      padding 14rpx
+      padding-top 39rpx
+      display flex
+      align-items center
+      justify-content space-between
+      background #fff
+      box-sizing border-box
+      input
+        width 500rpx
+        height 60rpx
+        background #eee
+        border-radius 30rpx
+      span
+        margin-right 40rpx
+        padding 10rpx
+        border-radius 10rpx
+        border 1px solid green
     .main-wrapper
       padding 24rpx
       .tiwen-tip

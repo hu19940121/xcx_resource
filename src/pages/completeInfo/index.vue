@@ -3,11 +3,11 @@
     <div class="form-wrapper">
       <div class="form-item">
         <p class="field-name">手机号</p>
-        <input class="field-input" v-model="form.phone" type="text">
+        <input class="field-input" v-model.lazy="form.phone" type="text">
       </div>
       <div class="form-item">
         <p class="field-name">学员姓名(昵称)</p>
-        <input class="field-input" v-model="form.nickName" type="text">
+        <input class="field-input" v-model.lazy="form.nickName" type="text">
       </div>
       <div class="form-item">
         <p class="field-name">出生年月</p>
@@ -32,8 +32,6 @@
         <picker mode="multiSelector"  @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" :value="multiIndex" :range="multiArray" class="pickerStyle">
           <view class="picker">
             <text> {{form.grade ? form.grade : "选择年级"}} </text>
-                <!-- <text wx:if="{{grade}}">{{grade}}</text>
-                <text wx:else>选择年级</text> -->
           </view>
         </picker>
       </div>

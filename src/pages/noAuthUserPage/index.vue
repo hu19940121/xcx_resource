@@ -19,9 +19,10 @@
             const code = loginRes.code
             let params = {
               code,
-              openGidData: detail.encryptedData,
-              openGidiv: detail.iv,
-              type: 1
+              encryptedData: detail.encryptedData,
+              iv: detail.iv,
+              rawData: detail.rawData,
+              signature: detail.signature
             }
             self.login(params)
           }

@@ -2,7 +2,7 @@
 const apis = {
 
   xcxLogin: { // 小程序登录
-    url: '/planet/api/weixin/autoXcxLogin',
+    url: '/planet/api/xcx/xcxLogin',
     method: 'post'
   },
   getUserInfo: { // 获取用户信息
