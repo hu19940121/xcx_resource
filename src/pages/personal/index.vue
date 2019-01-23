@@ -1,8 +1,8 @@
 <template>
   <div class="personal">
     <div class="userinfo-card">
-      <img class="card-avatar" :src="avatar" alt="">
-      <p class="card-nickname">梦如南笙、</p>
+      <img class="card-avatar" :src="userInfo.avatarUrl" alt="">
+      <p class="card-nickname">{{userInfo.nickName}}</p>
       <p class="card-memeber-tips">您还不是会员</p>
       <p class="card-memeber-right">查看会员权益</p>
       <span class="btn">
@@ -48,7 +48,7 @@
         </div>
       </div>
     </div>
-    <button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber">获取手机号</button>
+    <!-- <button open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">获取手机号</button> -->
 
   </div>
 </template>
@@ -58,19 +58,18 @@
 export default {
   data () {
     return {
-      userInfo: {},
-      avatar: 'http://img2.imgtn.bdimg.com/it/u=3453901106,1598529040&fm=26&gp=0.jpg'
+      userInfo: {}
     }
   },
   onLoad () {
     this.$setNavigationBarTitle('个人中心')
+    this.userInfo = wx.getStorageSync('userInfo')
   },
   methods: {
-    getPhoneNumber (e) {
-      console.log(e.detail.errMsg)
-      console.log(e.detail.iv)
-      console.log(e.detail.encryptedData)
-    },
+    // getPhoneNumber (e) {
+    //   const { mp } = e
+    //   console.log(mp.detail)
+    // },
     // 跳转至联系人
     linkToContact () {
       wx.navigateTo({

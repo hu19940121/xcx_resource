@@ -5,8 +5,8 @@
       :autoplay="true"
       :interval="3000"
     >
-      <swiper-item v-for="(img,index) in imageList" :key="index">
-        <img :src="img"></img>
+      <swiper-item v-for="(item,index) in imageList" :key="index">
+        <img :src="item.url"></img>
       </swiper-item>
     </swiper>
   </div>

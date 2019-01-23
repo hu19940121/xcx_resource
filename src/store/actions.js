@@ -5,9 +5,9 @@ import utils from '@/utils/index.js'
 
 export default {
   async getUserInfo ({commit}) {
-    const res = await http(apis.getUserInfo, { platform: 'wx_xcx' })
-    wx.setStorageSync('userInfo', res.data)
-    commit(types.SET_USERINFO, res.data)
+    const res = await http(apis.getUserInfo, { })
+    wx.setStorageSync('userInfo', res.data.userVO)
+    commit(types.SET_USERINFO, res.data.userVO)
   },
   async login ({dispatch, commit}, loginParams) {
     const res = await http(apis.xcxLogin, loginParams)

@@ -2,7 +2,7 @@ const questionList = [
 
   {
     id: 1,
-    time: 10,
+    time: 2,
     teacher: '大树',
     question: '第一个问题：把大象装进冰箱总共分几步？。',
     askList: [
@@ -19,7 +19,7 @@ const questionList = [
     ]
   }, {
     id: 2,
-    time: 20,
+    time: 8,
     teacher: '大树',
     question: '第二个问题：为什么要分为三步',
     askList: [

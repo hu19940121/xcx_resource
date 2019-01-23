@@ -5,9 +5,9 @@
     </div>
     <div class="menu-list-wrapper">
       <div class="menu-list">
-        <div class="menu" v-for="(menu,index) in menuList" :key="index" @click="linkToCate(menu.url)">
-          <img :src="menu.icon" alt="">
-          <p>{{menu.text}}</p>
+        <div class="menu" v-for="(menu,index) in iconList" :key="index" @click="linkToCate(menu.jumpUrl)">
+          <img :src="menu.url" alt="">
+          <p>{{menu.name}}</p>
         </div>
       </div>
     </div>
@@ -15,16 +15,15 @@
       <lunbo :imageList="earlyList" />
     </div>
     <div class="article-list">
-      <articleItem />
-      <articleItem />
-      <articleItem />
-      <articleItem />
+      <articleItem v-for="(article,index) in articleList" :key="index" :articleData="article" />
     </div>
   </div>
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
+// import { bannerList, iconList } from './mock.js'
+
 import articleItem from '@/components/articleItem'
 import lunbo from '@/components/lunbo'
 
@@ -32,65 +31,56 @@ export default {
   data () {
     return {
       userInfo: {},
-      bannerList: [
-        'http://image.steam001.com/index_banner01.png',
-        'http://image.steam001.com/index_banner01.png'
-      ],
-      earlyList: [
-        'http://image.steam001.com/02.png'
-      ],
-      menuList: [
-        {
-          icon: './images/index_tabicon_01.png',
-          text: '限时免费',
-          url: '/pages/resourceCate/main'
-        }, {
-          icon: './images/index_tabicon_02.png',
-          text: '限量领取'
-        }, {
-          icon: './images/index_tabicon_03.png',
-          text: '测一测'
-        }, {
-          icon: './images/index_tabicon_04.png',
-          text: '纪录片'
-        }, {
-          icon: './images/index_tabicon_05.png',
-          text: '英文绘本'
-        }, {
-          icon: './images/index_tabicon_06.png',
-          text: '趣味科学'
-        }, {
-          icon: './images/index_tabicon_07.png',
-          text: '大语文'
-        }, {
-          icon: './images/index_tabicon_08.png',
-          text: '限时免费'
-        }, {
-          icon: './images/index_tabicon_09.png',
-          text: '新人礼包'
-        }, {
-          icon: './images/index_tabicon_10.png',
-          text: '学习广场'
-        }
-
-      ]
+      // bannerList: bannerList,
+      // earlyList: bannerList,
+      // iconList: iconList,
+      articleList: [],
+      bannerList: [],
+      earlyList: [],
+      iconList: []
     }
   },
   methods: {
+    ...mapActions(['getUserInfo']),
+    // banner
+    getBannerList () {
+      // 顶部
+      this.$http(this.$apis.getBannerList, {position: 0}).then(res => {
+        this.bannerList = res.data || []
+        console.log(this.bannerList)
+      })
+      // 中间
+      this.$http(this.$apis.getBannerList, {position: 1}).then(res => {
+        this.earlyList = res.data || []
+        console.log(this.earlyList)
+      })
+    },
+    // 菜单列表
+    async getIconList () {
+      let res = await this.$http(this.$apis.getIconList, {})
+      this.iconList = res.data || []
+    },
+    // 文章列表
+    async getArticleList () {
+      let res = await this.$http(this.$apis.getArticleList, {})
+      this.articleList = res.data || []
+      console.log('this.articleList', this.articleList)
+    },
+    // 跳转到分类详情
     linkToCate (url) {
       wx.navigateTo({
         url: url
       })
     }
-    // linkToDetail () {
-    //   wx.navigateTo({
-    //     url: '/pages/goodsDetail/main?id=2'
-    //   })
-    // },
-    // ...mapActions(['getUserInfo', 'changeTestT'])
   },
   onLoad () {
     this.$setNavigationBarTitle('玩物立志')
+    // this.getUserInfo()
+    this.getBannerList()
+    this.getIconList()
+    this.getArticleList()
+    // console.log('iconList', iconList)
+    // console.log('bannerList', bannerList)
     // this.userInfo = wx.getStorageSync('userInfo')
   },
   computed: {
@@ -101,7 +91,7 @@ export default {
   },
   onPullDownRefresh: function () {
     wx.stopPullDownRefresh()
-    // this.getUserInfo()
+    this.getUserInfo()
   }
 }
 </script>

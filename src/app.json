@@ -14,7 +14,8 @@
     "pages/receiveSuccess/main",
     "pages/cooperation/main",
     "pages/myResource/main",
-    "pages/completeInfo/main"
+    "pages/completeInfo/main",
+    "pages/createPoster/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

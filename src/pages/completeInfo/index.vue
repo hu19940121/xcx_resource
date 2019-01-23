@@ -57,6 +57,11 @@
   
       }
     },
+    onLoad () {
+      this.$setNavigationBarTitle('完善信息')
+
+      this.form.phone = wx.getStorageSync('userInfo').phone
+    },
     methods: {
       bindDateChange (e) {
         const { mp } = e
@@ -111,9 +116,6 @@
         })
         console.log(this.form)
       }
-    },
-    onLoad () {
-      this.$setNavigationBarTitle('完善信息')
     }
   }
 </script>

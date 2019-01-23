@@ -18,25 +18,41 @@ function urlEncode (param, key, encode) {
   }
   return paramStr
 }
-export function formatTime (date) {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
+/**
+ * @method
+ * @param {Int} time 时间戳
+ * @param {Boolean} year 是否显示年份
+ * @returns {String} 运营商名称
+ * @desc 根据时间戳转换为日期格式
+ */
+export function formatTime (time, year = true) {
+  if (!time) return ''
+  var date = new Date(time)
+  var M = date.getMonth() + 1
+  var y = date.getFullYear()
+  var d = date.getDate()
 
-  const hour = date.getHours()
-  const minute = date.getMinutes()
-  const second = date.getSeconds()
-
-  const t1 = [year, month, day].map(formatNumber).join('/')
-  const t2 = [hour, minute, second].map(formatNumber).join(':')
-
-  return `${t1} ${t2}`
+  if (M < 10) M = '0' + M
+  if (d < 10) d = '0' + d
+  if (year) {
+    return y + '年' + M + '月' + d + '日'
+  } else {
+    return M + '月' + d + '日'
+  }
 }
+
 export function setNavigationBarTitle (title) {
   wx.setNavigationBarTitle({
     title
   })
 }
+export function showModal (content = '') {
+  wx.showModal({
+    title: '提示',
+    content: content
+  })
+}
+// export function linkToSomeWhere
 
 export default {
   formatNumber,

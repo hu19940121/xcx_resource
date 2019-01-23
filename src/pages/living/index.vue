@@ -29,7 +29,7 @@
       @scroll="scroll"
     >
       <div class="main-wrapper">
-        <div v-for="(item,index1) in questionList" :key="index1">
+        <!-- <div v-for="(item,index1) in questionList" :key="index1">
           <div class="question-wrapper">
             <div class="item question">
               <p><span class="presenter">{{item.teacher}}(老师)：</span>{{item.question}}</p>
@@ -44,42 +44,43 @@
               <p class="reply-question" v-for="(reply,index3) in ask.replyList" :key="index3">
                 <span class="replyer">{{reply.replyer}}老师答复：</span>{{reply.text}}
               </p>
-            </div>
+            </div> -->
             <!-- <p v-show="userInfo.identity ===1 " class="tiwen-tip">点击回答这个学员</p> -->
-            <p  class="tiwen-tip" @click="replay(index1,index2)">点击回答这个学员</p>
+            <!-- <p  class="tiwen-tip" @click="replay(index1,index2)">点击回答这个学员</p>
           </div>
-        </div>
-        <!-- <div>
+        </div> -->
+        <div v-if="currentQuestion">
           <div class="question-wrapper">
             <div class="item question">
               <p><span class="presenter">{{currentQuestion.teacher}}(老师)</span>{{currentQuestion.question}}</p>
             </div>
-            <p v-show="userInfo.identity === 0 "  class="tiwen-tip" @click="ask(index1)">对这段有问题？点击提问</p>
+            <p v-show="userInfo.identity === 0 "  class="tiwen-tip" @click="openDialog('ask',index1)">对这段有问题？点击提问</p>
           </div>
-          <div class="ask-wrapper" v-for="(ask,index2) in currentQuestion.askList" :key="index2">
+          <div class="ask-wrapper" v-for="(ask,askIndex) in currentQuestion.askList" :key="askIndex">
             <div class="item ask-and-replay">
               <p :class="[{ 'dashed-border': ask.replyList.length > 0 }, 'ask-question']">
                 <span class="asker">{{ask.asker}}：（提问）</span> {{ask.text}}
               </p>
-              <p class="reply-question" v-for="(reply,index3) in ask.replyList" :key="index3">
+              <p class="reply-question" v-for="(reply,replyIndex) in ask.replyList" :key="replyIndex">
                 <span class="replyer">{{reply.replyer}}老师答复：</span>{{reply.text}}
               </p>
             </div>
-            <p v-show="userInfo.identity ===1 " class="tiwen-tip">点击回答这个学员</p>
+            <!-- <p v-show="userInfo.identity ===1 " class="tiwen-tip">点击回答这个学员</p> -->
+            <p  class="tiwen-tip" @click="openDialog('reply',askIndex)">点击回答这个学员</p>
           </div>
-        </div> -->
+        </div>
       </div>
     </scroll-view>
 
     <van-dialog
         :title="dialogTitle"
         use-slot
-        :closeOnClickOverlay="true"
-        :asyncClose="true"
-        :show="visible"
+        :closeOnClickOverlay = "true"
+        :asyncClose = "true"
+        :show = "visible"
         show-cancel-button
-        @confirm="submit"
-        @cancel=" visible = false "
+        @confirm = "submit"
+        @cancel="onCancel"
       >
         <van-field
           :value="inputValue"
@@ -109,7 +110,7 @@
         questionIndex: null,
         askIndex: null,
         videoUrl: 'http://resource.kaier001.com/zhongdiangong.mp4',
-        currentQuestion: {},
+        currentQuestion: null,
         loadStatus: true, // 防止scrolltolower多次执行
         danmuList: [
           {
@@ -130,20 +131,34 @@
       this.videoContext = wx.createVideoContext('myVideo')
     },
     methods: {
-      ask (questionIndex) {
+      openDialog (type, index) {
         this.inputValue = ''
         this.visible = true
-        this.dialogTitle = '提问问题'
-        this.placeholder = '请输入问题'
-        this.questionIndex = questionIndex
+        this.videoContext.pause()
+        if (type === 'ask') {
+          this.dialogTitle = '提问问题'
+          this.placeholder = '请输入问题'
+          this.questionIndex = index
+        } else {
+          this.dialogTitle = '回答问题'
+          this.placeholder = '请输入答案'
+          this.askIndex = index
+        }
       },
-      replay (questionIndex, askIndex) {
-        this.inputValue = ''
-        this.visible = true
-        this.dialogTitle = '回答问题'
-        this.placeholder = '请输入答案'
-        this.askIndex = askIndex
-        this.questionIndex = questionIndex
+      // replay (questionIndex, askIndex) {
+      //   this.inputValue = ''
+      //   this.visible = true
+      //   this.dialogTitle = '回答问题'
+      //   this.placeholder = '请输入答案'
+      //   this.askIndex = askIndex
+      //   this.questionIndex = questionIndex
+      // },
+      // replay (askIndex) {
+
+      // },
+      onCancel () {
+        this.videoContext.play()
+        this.visible = false
       },
       onChange (event) {
         const { mp } = event
@@ -158,22 +173,26 @@
           })
           return false
         }
-        const { questionIndex, askIndex } = this
+        // const { questionIndex, askIndex } = this
+        const { askIndex } = this
         if (this.dialogTitle === '提问问题') {
           const askQuestionItem = {
             asker: '凯尔',
             text: this.inputValue,
             replyList: []
           }
-          questionList[questionIndex].askList.push(askQuestionItem)
+          // questionList[questionIndex].askList.push(askQuestionItem)
+          this.currentQuestion.askList.push(askQuestionItem)
         } else {
           const replayItem = {
             replyer: '凯尔',
             text: this.inputValue
           }
-          questionList[questionIndex].askList[askIndex].replyList.push(replayItem)
+          // questionList[questionIndex].askList[askIndex].replyList.push(replayItem)
+          this.currentQuestion.askList[askIndex].replyList.push(replayItem)
         }
         this.visible = false
+        this.videoContext.play()
       },
       // 滚动条到达底部
       lower () {
@@ -200,16 +219,20 @@
           text: this.danmuValue,
           color: this.getRandomColor()
         })
+      },
+      // 监听视频播放进度
+      timeupdate (e) {
+        const { mp } = e
+        console.log('mp.detail.currentTime', parseInt(mp.detail.currentTime))
+        questionList.map((item, index) => {
+          if (item.time === parseInt(mp.detail.currentTime)) {
+            this.currentQuestion = item
+          }
+        })
       }
-      // timeupdate (e) {
-      //   const { mp } = e
-      //   console.log('mp.detail.currentTime', parseInt(mp.detail.currentTime))
-      //   questionList.map((item, index) => {
-      //     if (item.time === parseInt(mp.detail.currentTime)) {
-      //       this.currentQuestion = item
-      //     }
-      //   })
-      // }
+    },
+    computed: {
+  
     }
   }
 </script>

@@ -1,0 +1,128 @@
+const iconList = [{
+  'id': 1,
+  'name': '限时免费',
+  'url': 'http://image.steam001.com/index_tabicon_01.png',
+  'jumpUrl': '/pages/resourceCate/main',
+  'orderIndex': null,
+  'remark': null,
+  'createTime': null,
+  'createUser': null,
+  'isEnabled': null,
+  'deleted': 0
+}, {
+  'id': 2,
+  'name': '0.9元乐高',
+  'url': 'http://image.steam001.com/index_tabicon_02.png',
+  'jumpUrl': null,
+  'orderIndex': null,
+  'remark': null,
+  'createTime': null,
+  'createUser': null,
+  'isEnabled': null,
+  'deleted': 0
+}, {
+  'id': 3,
+  'name': '限量领取',
+  'url': 'http://image.steam001.com/index_tabicon_03.png',
+  'jumpUrl': null,
+  'orderIndex': null,
+  'remark': null,
+  'createTime': null,
+  'createUser': null,
+  'isEnabled': null,
+  'deleted': 0
+}, {
+  'id': 4,
+  'name': '测一测',
+  'url': 'http://image.steam001.com/index_tabicon_04.png',
+  'jumpUrl': null,
+  'orderIndex': null,
+  'remark': null,
+  'createTime': null,
+  'createUser': null,
+  'isEnabled': null,
+  'deleted': 0
+}, {
+  'id': 5,
+  'name': '纪录片',
+  'url': 'http://image.steam001.com/index_tabicon_05.png',
+  'jumpUrl': null,
+  'orderIndex': null,
+  'remark': null,
+  'createTime': null,
+  'createUser': null,
+  'isEnabled': null,
+  'deleted': 0
+}, {
+  'id': 6,
+  'name': '英文绘本',
+  'url': 'http://image.steam001.com/index_tabicon_06.png',
+  'jumpUrl': null,
+  'orderIndex': null,
+  'remark': null,
+  'createTime': null,
+  'createUser': null,
+  'isEnabled': null,
+  'deleted': 0
+}, {
+  'id': 7,
+  'name': '趣味科学',
+  'url': 'http://image.steam001.com/index_tabicon_07.png',
+  'jumpUrl': null,
+  'orderIndex': null,
+  'remark': null,
+  'createTime': null,
+  'createUser': null,
+  'isEnabled': null,
+  'deleted': 0
+}, {
+  'id': 8,
+  'name': '大语文',
+  'url': 'http://image.steam001.com/index_tabicon_08.png',
+  'jumpUrl': null,
+  'orderIndex': null,
+  'remark': null,
+  'createTime': null,
+  'createUser': null,
+  'isEnabled': null,
+  'deleted': 0
+}, {
+  'id': 9,
+  'name': '新人礼包',
+  'url': 'http://image.steam001.com/index_tabicon_09.png',
+  'jumpUrl': null,
+  'orderIndex': null,
+  'remark': null,
+  'createTime': null,
+  'createUser': null,
+  'isEnabled': null,
+  'deleted': 0
+}, {
+  'id': 10,
+  'name': '学习广场',
+  'url': 'http://image.steam001.com/index_tabicon_10.png',
+  'jumpUrl': null,
+  'orderIndex': null,
+  'remark': null,
+  'createTime': null,
+  'createUser': null,
+  'isEnabled': null,
+  'deleted': 0
+}]
+const bannerList = [{
+  'id': 1,
+  'name': '趣味科学',
+  'url': 'http://image.steam001.com/index_banner01.png',
+  'jumpUrl': null,
+  'position': 0,
+  'orderIndex': 0,
+  'remark': null,
+  'createTime': 1547927638000,
+  'createUser': null,
+  'isEnabled': 1,
+  'deleted': 0
+}]
+export {
+  iconList,
+  bannerList
+}

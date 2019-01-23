@@ -2,16 +2,32 @@
 const apis = {
 
   xcxLogin: { // 小程序登录
-    url: '/planet/api/xcx/xcxLogin',
+    url: '/xcxLogin',
     method: 'post'
   },
   getUserInfo: { // 获取用户信息
-    url: '/planet/api/user/getUserInfo',
+    url: '/userCenter/getUserInfo',
     method: 'get'
   },
-  selectLineCourseTermInfoById: {
-    url: '/planet/api/lineCourseTerm/selectLineCourseTermInfoById', // 根据id获取商品详情
+  getBannerList: {// 获取banner
+    url: '/banner/getBannerList',
     method: 'get'
+  },
+  getIconList: {// 获取icon
+    url: '/icon/getIconList',
+    method: 'get'
+  },
+  getArticleList: {// 获取首页文章列表
+    url: '/article/getArticleList',
+    method: 'get'
+  },
+  getArticleDetail: {// 获取文章详情
+    url: '/article/getArticleDetail',
+    method: 'get'
+  },
+  getPhoneNumber: {// 获取文章详情
+    url: '/getPhoneNumber',
+    method: 'post'
   }
 }
 

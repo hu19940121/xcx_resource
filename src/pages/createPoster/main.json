@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "生成海报",
+  "navigationBarBackgroundColor": "#7274ec",
+  "usingComponents": {
+    "painter": "../../static/painter/painter",
+    "van-dialog": "../../static/vant/dialog/index"
+  }
+  
+}

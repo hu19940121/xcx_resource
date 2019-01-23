@@ -10,7 +10,7 @@
           <p class="color-red">领取本节所有资料</p>
           <p class="color-red">完成任务领取</p>
         </div>
-        <span class="tip btn btn-red" @click=" visible = true ">前往领取</span>
+        <span class="tip btn btn-red" @click="openTaskDialog">前往领取</span>
       </div>
       <div class="menu">
         <img class="icon" src="./images/task_icon_shortvip.png" alt="">
@@ -50,8 +50,8 @@
       use-slot
       async-close
       :showConfirmButton="false"
-      :show="visible"
-      @close="onClose"
+      :show="taskDialogvisible"
+      @close="taskDialogvisible = false"
       >
       <div class="lq-dialog">
         <h1 class="title">完成以下任务免费领取资源</h1>
@@ -74,40 +74,79 @@
           <p>2.好友点击(好友点击查看文章)</p>
           <p>3.分享好友(将文章分享至群)</p>
         </div>
-        <button class="lq-btn" @click="lq">分享任务领取</button>
+        <button class="lq-btn"  @click="receive">分享任务领取</button>
+        <!-- <button class="lq-btn" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">分享任务领取</button> -->
       </div>
+    </van-dialog>
+    <van-dialog
+      :closeOnClickOverlay="true"
+      use-slot
+      async-close
+      confirmButtonOpenType='getPhoneNumber'
+      :show="phoneDialogVisible"
+      @close="phoneDialogVisible = false"
+      @getphonenumber = 'getPhoneNumber'
+      >
+      <p class="tips">'玩物立志'需要获取您的手机号</p>
     </van-dialog>
     <!-- <van-dialog id="van-dialog" /> -->
   </div>
 </template>
 
 <script>
-// import Dialog from '@/../static/vant/dialog/dialog'
+import { mapActions } from 'vuex'
+import { showModal } from '../../utils/index.js'
 export default {
   data () {
     return {
-      visible: false,
+      phoneDialogVisible: false, // 授权获取电话号码弹窗
+      taskDialogvisible: false,
       shareStatus: 0 // 分享状态
     }
   },
+  onLoad () {
+  },
   methods: {
+    ...mapActions(['getUserInfo']),
     linkToCooperate () {
       wx.navigateTo({
         url: '/pages/cooperation/main'
       })
     },
-    onClose () {
-      this.visible = false
-    },
-    onClosed () {
-
+    getPhoneNumber (e) {
+      const { mp } = e
+      if (mp.detail.errMsg === 'getPhoneNumber:ok') {
+        wx.login({
+          success: (res) => {
+            // 调用后台接口解密获得手机号
+            const params = {
+              code: res.code,
+              encryptedData: mp.detail.encryptedData,
+              iv: mp.detail.iv
+            }
+            this.$http(this.$apis.getPhoneNumber, params).then(res => {
+              this.getUserInfo()
+              this.taskDialogvisible = true
+            })
+          }
+        })
+      } else {
+        showModal('请同意获取您的手机号哦~')
+      }
     },
     goShare () {
-      console.log('share')
-
       this.shareStatus = 1
     },
-    lq () {
+    // 打开任务弹窗
+    openTaskDialog () {
+      // 如果用户信息里没有电话号码 就授权去取电话号码
+      if (!wx.getStorageSync('userInfo').phone) {
+        this.phoneDialogVisible = true
+      } else {
+        this.taskDialogvisible = true
+      }
+    },
+    receive () {
       if (this.shareStatus !== 1) {
         wx.showToast({
           title: '你还没有完成任务哦~ 还不能领取',
@@ -120,7 +159,7 @@ export default {
       })
       setTimeout(() => {
         wx.hideLoading()
-        this.visible = false
+        this.taskDialogvisible = false
         wx.navigateTo({
           url: '/pages/living/main'
         })
@@ -135,6 +174,11 @@ export default {
     background-color: #e9f2f9 ;
   }
   .receiveRes
+    .tips
+      width 80%
+      margin 0 auto
+      padding  30rpx 0
+      text-align center
     .banner
       width 100%
       height 500rpx

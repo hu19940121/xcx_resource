@@ -1,9 +1,13 @@
 <template>
   <div :class="['article-item', {'border-bottom':showBorder},]" @click="linkToDetail">
     <div class="item-left">
-      <p class="title">资源列表01的标题，资源列表01的标题，标题的长度就这么多字，多了省略资源列表01的标题，标题的长度就这么多字，多了省略标题的长度就这么多字，多了省略.........</p>
-      <p class="content">最近直播01的预览。内容只有两行，在这个位置的时候就可以打省略号了最近直播01的预览。内容只有两行，在这个位置的时候就可以打省略号了</p>
-      <p class="at">#老师有话说#  #乐高编程#</p>
+      <p class="title">{{articleData.title}}</p>
+      <p class="content" v-html="content"></p>
+      <p class="at" >
+        <span class="category" v-for="(item,index) in articleData.categoryVOList" :key="index">
+          #{{item.name}}#
+        </span>
+      </p>
     </div>
     <div class="item-right">
       <img src="../pages/index/images/wx.png" alt="">
@@ -17,13 +21,28 @@ export default {
     showBorder: {
       type: Boolean,
       default: true
+    },
+    articleData: {
+      type: Object,
+      default: {
+
+      }
     }
+  },
+  onLoad () {
+
   },
   methods: {
     linkToDetail () {
       wx.navigateTo({
-        url: '/pages/resourceDetail/main'
+        url: `/pages/resourceDetail/main?id=${this.articleData.id}`
       })
+    }
+  },
+  computed: {
+    content () {
+      // console.log('删除img标签后的文章', this.articleData.content.replace(/<img.*?\/>/g, ''))
+      return this.articleData.content.replace(/<img.*?>/g, '')
     }
   }
 }
