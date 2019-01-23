@@ -1,10 +1,10 @@
 <script>
-import { mapActions } from 'vuex'
+// import { mapActions } from 'vuex'
 export default {
   onLaunch () {
-    const sessionKey = wx.getStorageSync('sessionKey')
-    console.log('sessionKey', sessionKey)
-    if (!sessionKey) {
+    const token = wx.getStorageSync('token')
+    console.log('token', token)
+    if (!token) {
       setTimeout(() => {
         wx.navigateTo({
           url: '/pages/noAuthUserPage/main'
@@ -13,7 +13,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['login'])
+    // ...mapActions(['login'])
   }
 }
 </script>

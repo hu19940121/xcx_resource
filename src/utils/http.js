@@ -5,12 +5,12 @@ const prefix = '/planet/xcx'
 const domain = 'http://192.168.0.111:8082' + prefix// 测试
 
 const http = function (opt, data) { // opt包括请求的url h和 请求方式 get post put delete
-  let sessionKey = wx.getStorageSync('sessionKey')// 本地取存储的sessionID
+  let token = wx.getStorageSync('token')// 本地取存储的sessionID
   let header = {}
-  if (sessionKey) {
-    header = { 'token': sessionKey }
+  if (token) {
+    header = { 'token': token }
     if (opt.type && opt.type === 'form') { // form表单形式传参
-      header = { 'token': sessionKey, 'content-type': 'application/x-www-form-urlencoded' }
+      header = { 'token': token, 'content-type': 'application/x-www-form-urlencoded' }
     }
   }
   wx.showLoading({
