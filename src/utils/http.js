@@ -2,7 +2,10 @@
 // const domain = 'https://www.steamglobe.com' // 正式
 // const domain = 'http://dev.steamglobe.com' // 测试
 const prefix = '/planet/xcx'
-const domain = 'http://192.168.0.111:8082' + prefix// 测试
+// https://www.nicesteam.org  @梦如南笙丶 正式域名
+// http://devsmart.steam001.com/planet/xcx/zgh/doAccessGZH
+const domain = 'http://192.168.0.112:8082' + prefix// 测试
+// const domain = 'http://devsmart.steam001.com' + prefix// 测试
 
 const http = function (opt, data) { // opt包括请求的url h和 请求方式 get post put delete
   let token = wx.getStorageSync('token')// 本地取存储的sessionID
@@ -23,21 +26,27 @@ const http = function (opt, data) { // opt包括请求的url h和 请求方式 g
       method: opt.method,
       header: header, // 设置请求的 header
       success: function (res) {
-        wx.hideLoading()
         if (res.data.code === 500) { // code为500 系统异常
-          wx.showToast({
-            title: res.data.msg,
-            icon: 'none',
-            duration: 2000
-          })
+          setTimeout(() => {
+            wx.showToast({
+              title: res.data.msg,
+              icon: 'none',
+              duration: 2000
+            })
+          }, 500)
+          wx.hideLoading()
           return
         }
         if (res.data.code === 1) { // code为1 错误信息
-          wx.showToast({
-            title: res.data.msg,
-            icon: 'none',
-            duration: 2000
-          })
+          setTimeout(() => {
+            wx.showToast({
+              title: res.data.msg,
+              icon: 'none',
+              duration: 2000
+            })
+          }, 500)
+          wx.hideLoading()
+
           return
         }
         if (res.data.code === 2) { // code为2 则未登录

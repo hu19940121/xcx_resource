@@ -62,4 +62,84 @@ const questionList = [
     ]
   }
 ]
-export default questionList
+
+const treeData = [{
+  'id': 1,
+  'questionId': 1,
+  'content': '1',
+  'fromUserId': '630ecb1c0ab34b5da3fc9cc43952445f',
+  'toUserId': 'fe042c7bf1de4543b494712925822ff5',
+  'replyId': null,
+  'createTime': 1548288853000,
+  'createUser': '630ecb1c0ab34b5da3fc9cc43952445f',
+  'videoId': 1,
+  'deleted': 0,
+  'twiceReplyVOList': [{
+    'id': 2,
+    'questionId': 1,
+    'content': '2',
+    'fromUserId': 'fe042c7bf1de4543b494712925822ff5',
+    'toUserId': '630ecb1c0ab34b5da3fc9cc43952445f',
+    'replyId': 1,
+    'createTime': 1548288853000,
+    'createUser': 'fe042c7bf1de4543b494712925822ff5',
+    'videoId': 1,
+    'deleted': 0,
+    'twiceReplyVOList': [{
+      'id': 3,
+      'questionId': 1,
+      'content': '3',
+      'fromUserId': '630ecb1c0ab34b5da3fc9cc43952445f',
+      'toUserId': 'fe042c7bf1de4543b494712925822ff5',
+      'replyId': 2,
+      'createTime': 1548288928000,
+      'createUser': '630ecb1c0ab34b5da3fc9cc43952445f',
+      'videoId': 1,
+      'deleted': 0,
+      'twiceReplyVOList': [{
+        'id': 4,
+        'questionId': 1,
+        'content': '4',
+        'fromUserId': 'fe042c7bf1de4543b494712925822ff5',
+        'toUserId': '630ecb1c0ab34b5da3fc9cc43952445f',
+        'replyId': 3,
+        'createTime': 1548288928000,
+        'createUser': 'fe042c7bf1de4543b494712925822ff5',
+        'videoId': 1,
+        'deleted': 0,
+        'twiceReplyVOList': null
+      }]
+    }]
+  }]
+},
+{
+  'id': 5,
+  'questionId': 1,
+  'content': '5',
+  'fromUserId': '630ecb1c0ab34b5da3fc9cc43952445f',
+  'toUserId': 'laoshi',
+  'replyId': null,
+  'createTime': 1548307723000,
+  'createUser': '630ecb1c0ab34b5da3fc9cc43952445f',
+  'videoId': 1,
+  'deleted': 0,
+  'twiceReplyVOList': null
+},
+{
+  'id': 6,
+  'questionId': 1,
+  'content': '6',
+  'fromUserId': 'fe042c7bf1de4543b494712925822ff5',
+  'toUserId': 'laoshi',
+  'replyId': null,
+  'createTime': 1548307723000,
+  'createUser': 'fe042c7bf1de4543b494712925822ff5',
+  'videoId': 1,
+  'deleted': 0,
+  'twiceReplyVOList': null
+}
+]
+export {
+  questionList,
+  treeData
+}

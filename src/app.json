@@ -15,8 +15,10 @@
     "pages/cooperation/main",
     "pages/myResource/main",
     "pages/completeInfo/main",
-    "pages/createPoster/main"
-  ],
+    "pages/createPoster/main",
+    "pages/form/main",
+    "pages/giftPackage/main"
+    ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#31B6FF",

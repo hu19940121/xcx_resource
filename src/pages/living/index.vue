@@ -1,7 +1,7 @@
 <template>
   <div class="living">
     <div class="video-wrapper">
-      <video :src="videoUrl" 
+      <video :src="videoInfo.url" 
         @timeupdate="timeupdate" 
         danmu-btn="true"
         enable-danmu="true"
@@ -9,15 +9,15 @@
         id="myVideo"
       ></video>
     </div>
-    <div class="send-danmu-wrapper">
+    <!-- <div class="send-danmu-wrapper">
       <input type="text" v-model="danmuValue">
       <span @click="sendDanmu">发送</span>
-    </div>
+    </div> -->
     <div class="video-info">
-      <img :src="avatar" alt="">
+      <img :src="videoInfo.teacherAvatar" alt="">
       <div class="info-desc">
-        <p class="teacher">大树</p>
-        <p class="video-introduce">蒙德里安各自话长对方的说法水电费是的水电费蒙德里安各自话长对方的说法水电费是的水电费</p>
+        <p class="teacher">{{videoInfo.showTeacherName}}</p>
+        <p class="video-introduce">{{videoInfo.name}}</p>
 
       </div>
     </div>
@@ -49,7 +49,7 @@
             <!-- <p  class="tiwen-tip" @click="replay(index1,index2)">点击回答这个学员</p>
           </div>
         </div> -->
-        <div v-if="currentQuestion">
+        <!-- <div v-if="currentQuestion">
           <div class="question-wrapper">
             <div class="item question">
               <p><span class="presenter">{{currentQuestion.teacher}}(老师)</span>{{currentQuestion.question}}</p>
@@ -64,9 +64,29 @@
               <p class="reply-question" v-for="(reply,replyIndex) in ask.replyList" :key="replyIndex">
                 <span class="replyer">{{reply.replyer}}老师答复：</span>{{reply.text}}
               </p>
-            </div>
+            </div> -->
             <!-- <p v-show="userInfo.identity ===1 " class="tiwen-tip">点击回答这个学员</p> -->
-            <p  class="tiwen-tip" @click="openDialog('reply',askIndex)">点击回答这个学员</p>
+            <!-- <p  class="tiwen-tip" @click="openDialog('reply',askIndex)">点击回答这个学员</p>
+          </div>
+        </div> -->
+        <div v-if="currentQuestion">
+          <div class="question-wrapper">
+            <div class="item question">
+              <p><span class="presenter">{{currentQuestion.teacherName}}(老师): </span>{{currentQuestion.content}}</p>
+            </div>
+            <p v-if="userInfo.identity === 1 "  class="tiwen-tip" @click="openDialog('ask')">对这段有问题？点击提问</p>
+          </div>
+          <div class="ask-wrapper" v-for="(askAndReply,askAndReplyIndex) in askAndReplyList" :key="askAndReplyIndex">
+            <div class="item ask-and-replay">
+              <p :class="[{ 'dashed-border': askAndReply.replyList.length > 0 }, 'ask-question']">
+                <span class="asker">{{askAndReply.askUser}}:（提问）</span> {{askAndReply.content}}
+              </p>
+              <p class="reply-question" v-for="(reply,replyIndex) in askAndReply.replyList" :key="replyIndex">
+                <span class="replyer"><span @click="openDialog('toOthers',replyIndex,reply,reply.fromUserId,reply.fromUserName)" :class="[{'colorRed':reply.identity === 2}]">{{reply.fromUserName}}</span> 回复 <span @click="openDialog('toOthers',replyIndex,reply,reply.toUserId,reply.toUserName)">{{reply.toUserName}}：</span></span>{{reply.content}}
+              </p>
+            </div> 
+            <!-- <p v-if="userInfo.identity === 2 " class="tiwen-tip">点击回答这个学员</p> -->
+            <p  class="tiwen-tip" @click="openDialog('reply',askAndReplyIndex,askAndReply)">点击回答这个学员</p>
           </div>
         </div>
       </div>
@@ -93,17 +113,17 @@
 </template>
 
 <script>
-  import questionList from './mock.js'
+  import { questionList } from './mock.js'
   export default {
     data () {
       return {
+        userInfo: {}, // identity 1学生 2老师
+        askAndReplyList: [],
         danmuValue: '',
         visible: false,
         avatar: 'http://img2.imgtn.bdimg.com/it/u=3453901106,1598529040&fm=26&gp=0.jpg',
         questionList: questionList,
-        userInfo: {
-          identity: 0 // 1 老师 0 学生
-        },
+        questionsList: [],
         inputValue: '', // 输入的问题 或者 输入的答案
         dialogTitle: '',
         placeholder: '',
@@ -111,51 +131,83 @@
         askIndex: null,
         videoUrl: 'http://resource.kaier001.com/zhongdiangong.mp4',
         currentQuestion: null,
+        replyList: [], // 评论回复列表
         loadStatus: true, // 防止scrolltolower多次执行
-        danmuList: [
-          {
-            text: '哈哈哈哈',
-            color: '#ff0000',
-            time: 1
-          },
-          {
-            text: '我看到你了哦',
-            color: '#ff00ff',
-            time: 3
-          }]
+        danmuList: [],
+        videoInfo: {}
       }
     },
     onLoad () {
+      this.getVideoById()
+      this.userInfo = wx.getStorageSync('userInfo')
     },
     onReady () {
       this.videoContext = wx.createVideoContext('myVideo')
     },
     methods: {
-      openDialog (type, index) {
+      async getVideoById () {
+        let videoRes = await this.$http(this.$apis.getVideoById, {id: this.$root.$mp.query.id})
+        this.videoInfo = videoRes.data
+        let questionRes = await this.$http(this.$apis.getQuestionList, {videoId: this.videoInfo.id})
+        this.questionsList = questionRes.data || []
+      },
+      // 解析生成评论回复列表
+      analysisData (dataList) {
+        let tempList = []
+        dataList.map((item, index) => {
+          let arr = []
+          tempList.push({
+            id: item.id,
+            toUserId: item.toUserId,
+            fromUserId: item.fromUserId,
+            askUser: item.fromUserName,
+            content: item.content,
+            replyList: item.twiceReplySetList ? this.mapList(item.twiceReplySetList, arr) : []
+          })
+        })
+        return tempList
+      },
+      // 递归取出树的节点 [{},{},{}]
+      mapList (treeData, arr) {
+        treeData.length > 0 && treeData.map(item => {
+          console.log('item', item)
+          arr.push({
+            id: item.id,
+            toUserId: item.toUserId,
+            fromUserId: item.fromUserId,
+            fromUserName: item.fromUserName,
+            toUserName: item.toUserName,
+            content: item.content,
+            identity: item.identity
+          })
+          if (item.twiceReplySetList) {
+            this.mapList(item.twiceReplySetList, arr)
+          }
+        })
+        return arr
+      },
+      // 打开问题窗口
+      openDialog (type, index, currentAskAndReply, toUserId, name) {
         this.inputValue = ''
         this.visible = true
         this.videoContext.pause()
         if (type === 'ask') {
           this.dialogTitle = '提问问题'
           this.placeholder = '请输入问题'
-          this.questionIndex = index
-        } else {
+        } else if (type === 'reply') {
           this.dialogTitle = '回答问题'
           this.placeholder = '请输入答案'
-          this.askIndex = index
+          this.replyId = currentAskAndReply.id
+          this.toUserId = currentAskAndReply.fromUserId
+        } else if (type === 'toOthers') {
+          this.toUserName = name
+          this.toUserId = toUserId
+          this.dialogTitle = `回复给${name}`
+          this.placeholder = '输入内容'
+          this.replyId = currentAskAndReply.id
         }
       },
-      // replay (questionIndex, askIndex) {
-      //   this.inputValue = ''
-      //   this.visible = true
-      //   this.dialogTitle = '回答问题'
-      //   this.placeholder = '请输入答案'
-      //   this.askIndex = askIndex
-      //   this.questionIndex = questionIndex
-      // },
-      // replay (askIndex) {
 
-      // },
       onCancel () {
         this.videoContext.play()
         this.visible = false
@@ -173,26 +225,30 @@
           })
           return false
         }
-        // const { questionIndex, askIndex } = this
-        const { askIndex } = this
+        let params = {}
         if (this.dialogTitle === '提问问题') {
-          const askQuestionItem = {
-            asker: '凯尔',
-            text: this.inputValue,
-            replyList: []
+          params = {
+            questionId: this.currentQuestion.id,
+            toUserId: this.currentQuestion.userId,
+            videoId: this.videoInfo.id,
+            content: this.inputValue
           }
-          // questionList[questionIndex].askList.push(askQuestionItem)
-          this.currentQuestion.askList.push(askQuestionItem)
         } else {
-          const replayItem = {
-            replyer: '凯尔',
-            text: this.inputValue
+          params = {
+            questionId: this.currentQuestion.id,
+            toUserId: this.toUserId,
+            videoId: this.videoInfo.id,
+            content: this.inputValue,
+            replyId: this.replyId
           }
-          // questionList[questionIndex].askList[askIndex].replyList.push(replayItem)
-          this.currentQuestion.askList[askIndex].replyList.push(replayItem)
         }
-        this.visible = false
-        this.videoContext.play()
+        this.$http(this.$apis.addReply, params).then(res => {
+          if (res.code === 200) {
+            this.getReplyListByQueId(this.currentReplyId)
+            this.visible = false
+            this.videoContext.play()
+          }
+        })
       },
       // 滚动条到达底部
       lower () {
@@ -204,29 +260,33 @@
           }, 100)
         }
       },
-      // 获取随机颜色
-      getRandomColor () {
-        let rgb = []
-        for (let i = 0; i < 3; i++) {
-          let color = Math.floor(Math.random() * 256).toString(16)
-          color = color.length === 1 ? '0' + color : color
-          rgb.push(color)
-        }
-        return '#' + rgb.join('')
-      },
       sendDanmu () {
         this.videoContext.sendDanmu({
           text: this.danmuValue,
           color: this.getRandomColor()
         })
       },
+      // 根据问题id和视频id获取问题和回复列表
+      getReplyListByQueId (id) {
+        let params = { questionId: id, videoId: this.videoInfo.id }
+        this.$http(this.$apis.getReplyList, params).then(res => {
+          if (res.data) {
+            this.askAndReplyList = this.analysisData(res.data)
+          } else {
+            this.askAndReplyList = []
+          }
+          console.log('this.askAndReplyList', this.askAndReplyList)
+        })
+      },
       // 监听视频播放进度
       timeupdate (e) {
         const { mp } = e
-        console.log('mp.detail.currentTime', parseInt(mp.detail.currentTime))
-        questionList.map((item, index) => {
-          if (item.time === parseInt(mp.detail.currentTime)) {
+        this.currentTime !== parseInt(mp.detail.currentTime) && this.questionsList.map((item, index) => {
+          if (item.timePoint === parseInt(mp.detail.currentTime)) {
+            this.currentTime = parseInt(mp.detail.currentTime)
             this.currentQuestion = item
+            this.getReplyListByQueId(item.id)
+            this.currentReplyId = item.id
           }
         })
       }
@@ -322,5 +382,7 @@
           .reply-question
             padding-top 14rpx
             .replyer
+              color #000
+            .colorRed
               color #FF0036
 </style>

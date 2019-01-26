@@ -4,10 +4,12 @@ import apis from '@/utils/apis.js'
 import utils from '@/utils/index.js'
 
 export default {
-  async getUserInfo ({commit}) {
+  async getUserInfo ({commit}, fun = () => {}) {
     const res = await http(apis.getUserInfo, { })
-    wx.setStorageSync('userInfo', res.data.userVO)
+    wx.setStorageSync('hasKid', res.data.hasKid)
+    // wx.setStorageSync('userInfo', res.data.userVO)
     commit(types.SET_USERINFO, res.data.userVO)
+    fun()
   },
   async login ({dispatch, commit}, loginParams) {
     const res = await http(apis.xcxLogin, loginParams)

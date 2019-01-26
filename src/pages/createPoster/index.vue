@@ -6,8 +6,8 @@
         <button class="btn btn-save" @click="savePoster">
           保存到手机
         </button>
-        <button class="btn btn-share" >
-          分享图片
+        <button open-type="share"  class="btn btn-share" >
+          点击分享
         </button>
       </div>
     </div>
@@ -33,35 +33,13 @@ export default {
       posterPath: '',
       customStyle: '',
       template: {
-        width: '600rpx',
-        height: '1080rpx',
-        background: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1547993240392&di=5eff48880589ff361b3938b2e8e6bad9&imgtype=0&src=http%3A%2F%2Fimg.sccnn.com%2Fbimg%2F341%2F00958.jpg',
-        views: [
-          {
-            type: 'text',
-            text: '中间的文字sdasdasd萨达萨达所',
-            css: {
-              top: '60rpx',
-              left: '300rpx',
-              align: 'center',
-              fontSize: '30rpx',
-              color: '#fff'
-            }
-          }
-          // {
-          //   type: 'text',
-          //   text: "mode: 'aspectFill' 或 无",
-          //   css: {
-          //     left: '210rpx',
-          //     fontSize: '30rpx',
-          //     top: '290rpx'
-          //   }
-          // },
-        ]
-      }
+
+      },
+      params: {} // 上个页面传过来的参数
     }
   },
   onLoad () {
+    this.params = JSON.parse(this.$root.$mp.query.params)
     this.getErcode()
   },
   methods: {
@@ -80,11 +58,49 @@ export default {
     },
     openSetting (e) {
     },
+    initTemplate () {
+      this.template = {
+        width: '600rpx',
+        height: '1080rpx',
+        background: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1547993240392&di=5eff48880589ff361b3938b2e8e6bad9&imgtype=0&src=http%3A%2F%2Fimg.sccnn.com%2Fbimg%2F341%2F00958.jpg',
+        views: [
+          // {
+          //   type: 'text',
+          //   text: '中间的文字sdasdasd萨达萨达所',
+          //   css: {
+          //     top: '60rpx',
+          //     left: '300rpx',
+          //     align: 'center',
+          //     fontSize: '30rpx',
+          //     color: '#fff'
+          //   }
+          // },
+          {
+            type: 'image',
+            url: this.erCodeImg,
+            css: {
+              width: '200rpx',
+              height: '200rpx',
+              left: '300rpx',
+              bottom: '30rpx',
+              align: 'center'
+            }
+          }
+        ]
+      }
+    },
+    // 分享成功
+    shareTaskSuccess () {
+      this.$http(this.$apis.shareTaskSuccess, this.params).then(res => {
+        console.log('res', res)
+      })
+    },
     savePoster () {
       const { posterPath } = this
       wx.saveImageToPhotosAlbum({
         filePath: posterPath,
         success: res => {
+          this.shareTaskSuccess()
           wx.showModal({
             title: '分享二维码已保存到系统相册',
             content: '快去分享给朋友，让更多的朋友发现这里的美好',
@@ -106,14 +122,40 @@ export default {
       // this.template = {} // 重置,下次点击生成时重新生成
     },
     getErcode () {
-      wx.showLoading({
-        title: '获取二维码中'
+      const { taskId, articleId, resourceId } = this.params
+      console.log('taskId', taskId)
+      console.log('articleId', articleId)
+      console.log('resourceId', resourceId)
+
+      const params = {
+        scene: `PT:${taskId}:${articleId}:${resourceId}`
+      }
+      this.$http(this.$apis.createQrCode, params).then(res => {
+        console.log(res)
+        this.erCodeImg = res.data.qrCodeUrl
+        this.initTemplate()
       })
-      setTimeout(() => {
-        wx.hideLoading()
-        this.erCodeImg = 'ssss'
-      }, 1000)
+      // wx.showLoading({
+      //   title: '获取二维码中'
+      // })
+      // setTimeout(() => {
+      //   wx.hideLoading()
+      //
+      // }, 1000)
     }
+  },
+  // 分享
+  onShareAppMessage (res) {
+    let shareObj = {}
+    if (res.from === 'button') {
+      shareObj = {
+        title: '自定义转发标题',
+        path: '',
+        imageUrl: this.posterPath
+
+      }
+    }
+    return shareObj
   }
 }
 </script>

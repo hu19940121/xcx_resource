@@ -3,11 +3,11 @@
     <div class="userinfo-card">
       <img class="card-avatar" :src="userInfo.avatarUrl" alt="">
       <p class="card-nickname">{{userInfo.nickName}}</p>
-      <p class="card-memeber-tips">您还不是会员</p>
-      <p class="card-memeber-right">查看会员权益</p>
-      <span class="btn">
+      <!-- <p class="card-memeber-tips">您还不是会员</p> -->
+      <!-- <p class="card-memeber-right">查看会员权益</p> -->
+      <!-- <span class="btn">
         开通会员
-      </span>
+      </span> -->
     </div>
     <div class="menu-list">
       <div class="menu" @click="linkToCompleteInfo">
@@ -16,7 +16,7 @@
           <p>我的基本信息</p>
           <p>我的基本信息</p>
         </div>
-        <span class="tip menu1">尚未完善</span>
+        <span  class="tip menu1">{{hasKid === 1 ?'已完善' :'尚未完善'}}</span>
       </div>
       <div class="menu" @click="linkToMyRes">
         <img class="icon" src="./images/my_icon_course.png" alt="">
@@ -26,14 +26,14 @@
         </div>
         <span class="tip menu2"></span>
       </div>
-      <div class="menu" @click="linkToPlanet">
+      <!-- <div class="menu" @click="linkToPlanet">
         <img class="icon" src="./images/my_icon_wwlz.png" alt="">
         <div class="menu-desc">
           <p>前往玩物星球小程序</p>
           <p>在玩物星球小程序发布您的作品</p>
         </div>
-      </div>
-      <div class="menu">
+      </div> -->
+      <div class="menu" @click="linkTofuli">
         <img class="icon" src="./images/my_icon_present.png" alt="">
         <div class="menu-desc">
           <p>领取福利</p>
@@ -58,12 +58,17 @@
 export default {
   data () {
     return {
-      userInfo: {}
+      hasKid: null,
+      userInfo: {} // identity 1 学生 2老师
     }
   },
   onLoad () {
     this.$setNavigationBarTitle('个人中心')
+    // this.userInfo = wx.getStorageSync('userInfo')
+  },
+  onShow () {
     this.userInfo = wx.getStorageSync('userInfo')
+    this.hasKid = wx.getStorageSync('hasKid')
   },
   methods: {
     // getPhoneNumber (e) {
@@ -88,6 +93,12 @@ export default {
         url: '/pages/myResource/main'
       })
     },
+    // 跳转到领取福利
+    linkTofuli () {
+      wx.navigateTo({
+        url: '/pages/giftPackage/main'
+      })
+    },
     // 跳转至玩物星球俱乐部小程序
     linkToPlanet () {
       wx.navigateToMiniProgram({
@@ -96,7 +107,6 @@ export default {
         extraData: {},
         envVersion: 'develop',
         success: function () {
-
         }
       })
     }
@@ -112,7 +122,9 @@ export default {
     width 690rpx
     height 350rpx
     padding 34rpx 30rpx
-    background #383838
+    // background #383838
+    background url('http://image.steam001.com/banner.png')
+    background-size 100% 100%
     border-radius 14rpx
     box-sizing border-box
     overflow hidden

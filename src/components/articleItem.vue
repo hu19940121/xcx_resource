@@ -10,7 +10,7 @@
       </p>
     </div>
     <div class="item-right">
-      <img src="../pages/index/images/wx.png" alt="">
+      <img :src="articleData.thumbnailUrl" alt="">
     </div>
   </div>
 </template>
@@ -25,7 +25,6 @@ export default {
     articleData: {
       type: Object,
       default: {
-
       }
     }
   },

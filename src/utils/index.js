@@ -25,7 +25,7 @@ function urlEncode (param, key, encode) {
  * @returns {String} 运营商名称
  * @desc 根据时间戳转换为日期格式
  */
-export function formatTime (time, year = true) {
+export function formatTime (time, year = true, str) {
   if (!time) return ''
   var date = new Date(time)
   var M = date.getMonth() + 1
@@ -35,7 +35,8 @@ export function formatTime (time, year = true) {
   if (M < 10) M = '0' + M
   if (d < 10) d = '0' + d
   if (year) {
-    return y + '年' + M + '月' + d + '日'
+    return str ? y + str + M + str + d : y + '年' + M + '月' + d + '日'
+    // return y + '年' + M + '月' + d + '日'
   } else {
     return M + '月' + d + '日'
   }

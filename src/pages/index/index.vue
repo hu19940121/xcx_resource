@@ -5,7 +5,7 @@
     </div>
     <div class="menu-list-wrapper">
       <div class="menu-list">
-        <div class="menu" v-for="(menu,index) in iconList" :key="index" @click="linkToCate(menu.jumpUrl)">
+        <div class="menu" v-for="(menu,index) in iconList" :key="index" @click="linkToCate(menu.jumpUrl,menu.remark,menu.id,menu.isEnabled)">
           <img :src="menu.url" alt="">
           <p>{{menu.name}}</p>
         </div>
@@ -17,6 +17,9 @@
     <div class="article-list">
       <articleItem v-for="(article,index) in articleList" :key="index" :articleData="article" />
     </div>
+    <!-- <form @submit="testSubmit" report-submit="true">
+      <button formType="submit">发送模板消息</button>
+    </form> -->
   </div>
 </template>
 
@@ -37,12 +40,26 @@ export default {
       articleList: [],
       bannerList: [],
       earlyList: [],
-      iconList: []
+      iconList: [],
+      hasMoreData: true, // 上拉的时候是不是要继续请求数据
+      pageNum: 1,
+      pageSize: 2
+
     }
   },
   methods: {
     ...mapActions(['getUserInfo']),
     // banner
+    // testSubmit (e) {
+    //   const { mp } = e
+    //   console.log('mp.detail.formId', mp.detail.formId)
+
+    //   let params = {fromId: mp.detail.formId}
+    //   this.$http(this.$apis.testSend, params).then(res => {
+    //     console.log(res)
+    //   })
+    //   console.log('form e', e)
+    // },
     getBannerList () {
       // 顶部
       this.$http(this.$apis.getBannerList, {position: 0}).then(res => {
@@ -61,16 +78,53 @@ export default {
       this.iconList = res.data || []
     },
     // 文章列表
-    async getArticleList () {
-      let res = await this.$http(this.$apis.getArticleList, {})
-      this.articleList = res.data || []
-      console.log('this.articleList', this.articleList)
+    getArticleList () {
+      let params = {
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      }
+      this.$http(this.$apis.getArticleList, params).then(res => {
+        const { isLastPage } = res.data
+        let articleListTem = this.articleList
+        if (res.code === 200) {
+          if (this.pageNum === 1) {
+            articleListTem = []
+          }
+          let articleList = res.data.list
+          if (isLastPage) { // 如果是最后一页
+            this.articleList = articleListTem.concat(articleList)
+            this.hasMoreData = false
+          } else {
+            this.articleList = articleListTem.concat(articleList)
+            this.hasMoreData = true
+            this.pageNum = this.pageNum + 1
+          }
+        }
+      })
     },
     // 跳转到分类详情
-    linkToCate (url) {
-      wx.navigateTo({
-        url: url
-      })
+    linkToCate (url, remark, id, isEnabled) {
+      if (remark === 'planet') {
+        wx.navigateToMiniProgram({
+          appId: 'wxac35230c99e1209b',
+          path: 'pages/index/index',
+          extraData: {},
+          envVersion: 'develop',
+          success: function () {
+          }
+        })
+      } else {
+        if (isEnabled === 0) {
+          wx.showToast({
+            title: '暂未开放~',
+            icon: 'none'
+          })
+          return false
+        }
+        wx.navigateTo({
+          url: url + '?id=' + id
+        })
+      }
     }
   },
   onLoad () {
@@ -89,9 +143,24 @@ export default {
     articleItem,
     lunbo
   },
+  // 上拉加载
+  onReachBottom: function () {
+    if (this.hasMoreData) {
+      this.getArticleList()
+    } else {
+      wx.showToast({
+        title: '没有更多数据~',
+        icon: 'none'
+      })
+    }
+  },
   onPullDownRefresh: function () {
     wx.stopPullDownRefresh()
     this.getUserInfo()
+    this.getBannerList()
+    this.getIconList()
+    this.pageNum = 1
+    this.getArticleList()
   }
 }
 </script>

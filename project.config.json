@@ -5,13 +5,14 @@
 		"es6": true,
 		"postcss": true,
 		"minified": true,
-		"newFeature": true
+		"newFeature": true,
+		"autoAudits": false
 	},
 	"miniprogramRoot": "dist/wx/",
 	"compileType": "miniprogram",
 	"appid": "wx9bff1f36f7250b70",
 	"projectname": "xcx_resource",
-	"libVersion": "2.5.0",
+	"libVersion": "2.5.1",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -30,7 +31,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 11,
+			"current": 6,
 			"list": [
 				{
 					"id": -1,
@@ -60,25 +61,25 @@
 					"id": 4,
 					"name": "文章详情",
 					"pathName": "pages/resourceDetail/main",
-					"query": ""
+					"query": "id=1"
 				},
 				{
-					"id": -1,
+					"id": 5,
 					"name": "领取资源",
 					"pathName": "pages/receiveResource/main",
-					"query": ""
+					"query": "resourceId=2&articleId=2"
 				},
 				{
-					"id": -1,
+					"id": 6,
 					"name": "直播页面",
 					"pathName": "pages/living/main",
-					"query": ""
+					"query": "id=1"
 				},
 				{
-					"id": -1,
+					"id": 7,
 					"name": "领取成功",
 					"pathName": "pages/receiveSuccess/main",
-					"query": ""
+					"query": "id=3"
 				},
 				{
 					"id": -1,
@@ -99,9 +100,22 @@
 					"query": ""
 				},
 				{
-					"id": -1,
+					"id": 11,
 					"name": "生成海报",
-					"pathName": "pages/createPoster/main"
+					"pathName": "pages/createPoster/main",
+					"query": "params={\"resourceId\":\"4\",\"articleId\":\"2\",\"taskId\":2}"
+				},
+				{
+					"id": 12,
+					"name": "表单",
+					"pathName": "pages/form/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "授权登录",
+					"pathName": "pages/noAuthUserPage/main",
+					"query": ""
 				}
 			]
 		}

@@ -1,3 +1,8 @@
 {
-  "navigationBarTitleText":"我解锁的课程"
+  "navigationBarTitleText":"我解锁的课程",
+  "usingComponents": {
+    "van-dialog": "../../static/vant/dialog/index",
+    "van-tab": "../../static/vant/tab/index",
+    "van-tabs": "../../static/vant/tabs/index"
+  }
 }
